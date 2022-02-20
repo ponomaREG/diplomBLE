@@ -1,5 +1,7 @@
 package com.fap.diplomble
 
+import android.util.TypedValue
+
 data class BleDevice(
     val name: String,
     val rssi: Int,
@@ -7,5 +9,5 @@ data class BleDevice(
     val power: Int,
     val major: Int,
     val minor: Int,
-    val distance: Float
+    var distance: Float?
 )

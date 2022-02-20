@@ -1,4 +1,4 @@
-package com.fap.diplomble.filter.kalman.base
+package com.fap.diplomble.emitter.kalman.base
 
 class KalmanFilter {
 

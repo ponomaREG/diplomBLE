@@ -5,7 +5,7 @@ import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
 import android.util.Log
-import com.fap.diplomble.bluetooth.filter.AbstractScanRecordEmitter
+import com.fap.diplomble.emitter.AbstractScanRecordEmitter
 
 class BLEScanner constructor(
     private val systemScanner: BluetoothLeScanner,
@@ -24,7 +24,9 @@ class BLEScanner constructor(
 
         override fun onBatchScanResults(results: MutableList<ScanResult>?) {
             super.onBatchScanResults(results)
-            Log.e("results", results.toString())
+            results?.let {
+                emitter?.emit(it)
+            }
         }
     }
 

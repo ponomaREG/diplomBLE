@@ -1,21 +1,43 @@
-package com.fap.diplomble.bluetooth.filter
+package com.fap.diplomble.emitter
 
 import android.bluetooth.le.ScanResult
 import com.fap.diplomble.BleDevice
 import com.fap.diplomble.collector.AbstractCollector
-import com.fap.diplomble.distance.AbstractDistanceCalculator
+import com.fap.diplomble.util.log
 import com.neovisionaries.bluetooth.ble.advertising.ADPayloadParser
 import com.neovisionaries.bluetooth.ble.advertising.IBeacon
 
 class BeaconEmitter(
     private val supportedMinors: List<Int>,
-    private val distanceCalculator: AbstractDistanceCalculator,
     private val collector: AbstractCollector
 ) : AbstractScanRecordEmitter() {
 
     override fun emit(scanResult: ScanResult) {
-        if (scanResult.scanRecord == null) return
+        parseAndMap(scanResult)?.let {
+            collector.collect(it)
+        }
+    }
+
+    override fun emit(scanResults: List<ScanResult>) {
+        val devices = mutableListOf<BleDevice>()
+        scanResults.forEach {
+            val result = parseAndMap(it)
+            result?.let { res ->
+                devices.addAll(res)
+            }
+        }
+        devices.log("parsedDevices") {
+            it.toString()
+        }
+        collector.collect(
+            devices.distinctBy { it.minor }.sortedBy { it.minor }
+        )
+    }
+
+    private fun parseAndMap(scanResult: ScanResult): List<BleDevice>? {
+        if (scanResult.scanRecord == null) return null
         val listAd = ADPayloadParser.getInstance().parse(scanResult.scanRecord!!.bytes)
+        val devices = mutableListOf<BleDevice>()
         listAd.forEach { adStructure ->
             if (adStructure is IBeacon) {
                 if (supportedMinors.contains(adStructure.minor)) {
@@ -27,13 +49,12 @@ class BeaconEmitter(
                             power = adStructure.power,
                             rssi = scanResult.rssi,
                             uuid = adStructure.uuid.toString(),
-                            distance = distanceCalculator.calculateDistance(scanResult.rssi, adStructure.power)
+                            distance = null
                         )
-                    collector.collect(model)
+                    devices.add(model)
                 }
             }
         }
+        return devices
     }
-
-
 }

@@ -21,6 +21,8 @@ class RoomView constructor(
         private const val DEFAULT_BEACON_COLOR_ID = R.color.design_default_color_on_secondary
         private const val DEFAULT_USER_MARK_COLOR_ID = R.color.teal_700
 
+        private const val DEFAULT_AREA_CIRCLE_COLOR = Color.GREEN
+
         private const val DEFAULT_STROKE_WIDTH = 10f
         private const val DEFAULT_USER_MARK_WIDTH = 10f
         private const val DEFAULT_USER_MARK_HEIGHT = 10f
@@ -109,6 +111,11 @@ class RoomView constructor(
         style = Paint.Style.FILL
     }
 
+    private val areaPaint = Paint().apply {
+        color = DEFAULT_AREA_CIRCLE_COLOR
+        style = Paint.Style.STROKE
+    }
+
     private var userMarkRectF: RectF? = null
 
     private val rectF = RectF(
@@ -121,9 +128,11 @@ class RoomView constructor(
     private val beaconsRectList: MutableList<RectF> = mutableListOf()
 
     private val beaconMutableList: MutableList<BeaconCoordinates> = mutableListOf()
+
     val beaconList: List<BeaconCoordinates>
         get() = beaconMutableList
 
+    private val beaconsAreaRectList: MutableList<Float> = mutableListOf()
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -146,6 +155,14 @@ class RoomView constructor(
                 beaconPaint
             )
         }
+        beaconsAreaRectList.forEachIndexed { index, fl ->
+            canvas.drawCircle(
+                beaconsRectList[index].left,
+                beaconsRectList[index].top,
+                fl,
+                areaPaint
+            )
+        }
         userMarkRectF?.let {
             canvas.drawRect(
                 it,
@@ -153,6 +170,12 @@ class RoomView constructor(
             )
         }
     }
+
+    fun setAreaCircles(l: List<Float>) {
+        beaconsAreaRectList.clear()
+        beaconsAreaRectList.addAll(l)
+    }
+
 
     fun setUserMark(
         x: Float,

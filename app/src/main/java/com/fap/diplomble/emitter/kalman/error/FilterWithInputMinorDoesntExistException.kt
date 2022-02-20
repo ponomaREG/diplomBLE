@@ -1,4 +1,4 @@
-package com.fap.diplomble.filter.kalman.error
+package com.fap.diplomble.emitter.kalman.error
 
 class FilterWithInputMinorDoesntExistException constructor(val minor: Int) : RuntimeException() {
 
