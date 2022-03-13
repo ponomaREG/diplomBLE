@@ -8,7 +8,7 @@
     android:orientation="vertical"
     tools:context=".TrilationActivity">
 
-    <com.fap.diplomble.view.RoomView
+    <com.fap.diplomble.presentation.view.RoomView
         android:id="@+id/room"
         android:layout_width="310dp"
         android:layout_height="592dp"
