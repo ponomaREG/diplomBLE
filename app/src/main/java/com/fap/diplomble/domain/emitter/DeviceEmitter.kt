@@ -1,6 +1,7 @@
 package com.fap.diplomble.domain.emitter
 
 import android.util.Log
+import com.fap.diplomble.domain.Config
 import com.fap.diplomble.domain.filter.kalman.AbstractFilter
 import com.fap.diplomble.domain.model.BleDevice
 import io.reactivex.Observable
@@ -18,9 +19,17 @@ class DeviceEmitter @Inject constructor(
     }
 
     override fun source(): Observable<List<BleDevice>> = publishSubject
+        .map {
+            it.filter { bleDevice ->
+                Config.beacons.find { b ->
+                    b.minor == bleDevice.minor
+                } != null
+            }
+        }
         .filter {
             it.size >= 4
         }
+        .distinctUntilChanged()
         .map { list ->
             list.map { device ->
                 device.copy(

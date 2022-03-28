@@ -1,6 +1,7 @@
 package com.fap.diplomble.domain.mapper
 
 import android.bluetooth.le.ScanResult
+import android.util.Log
 import com.fap.diplomble.domain.model.BleDevice
 import com.fap.diplomble.domain.emitter.AbstractEmitter
 import com.neovisionaries.bluetooth.ble.advertising.ADPayloadParser
@@ -19,6 +20,7 @@ class BeaconMapper @Inject constructor(
 
     override fun emit(scanResults: List<ScanResult>) {
         val devices = mutableListOf<BleDevice>()
+//        Log.e("emit","123")
         scanResults.forEach {
             val result = parseAndMap(it)
             result?.let { res ->

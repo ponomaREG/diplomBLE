@@ -59,6 +59,7 @@ class MainViewModel @Inject constructor(
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { predictedId ->
+                Log.e("predictedId", predictedId.toString())
                 updateMap(predictedId)
             }
             .addTo(compositeDisposable)
