@@ -3,6 +3,7 @@ package com.fap.diplomble.presentation.activity
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.fap.diplomble.domain.emitter.AbstractEmitter
+import com.fap.diplomble.domain.emitter.StubEmitter
 import com.fap.diplomble.domain.model.BleDevice
 import com.fap.diplomble.domain.predict_model.AbstractPredictedModel
 import com.fap.diplomble.domain.predict_model.KNeighborsClassifier
@@ -14,13 +15,14 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val startScanUseCase: StartScanUseCase,
     private val stopScanUseCase: StartScanUseCase,
-    private val emitter: AbstractEmitter
+    private val emitter: StubEmitter
 ): ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
